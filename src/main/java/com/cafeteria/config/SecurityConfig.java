@@ -27,8 +27,11 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/index", "/home").permitAll() // Allow access to home page
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/images/**", "/css/**", "/js/**").permitAll() // Static resources if needed
+                .requestMatchers("/files/download/**").permitAll() // Allow public file downloads
+                .requestMatchers("/images/**", "/css/**", "/js/**", "/favicon.ico").permitAll() // Static resources
+                .requestMatchers("/error").permitAll() // Allow error page
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

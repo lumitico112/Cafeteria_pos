@@ -7,6 +7,7 @@ import com.cafeteria.entity.Rol;
 import com.cafeteria.entity.Usuario;
 import com.cafeteria.repository.RolRepository;
 import com.cafeteria.repository.UsuarioRepository;
+import com.cafeteria.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

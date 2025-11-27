@@ -1,4 +1,4 @@
-package com.cafeteria.service;
+package com.cafeteria.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

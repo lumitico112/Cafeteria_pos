@@ -9,3 +9,5 @@ public class SistemaPosApplication {
         SpringApplication.run(SistemaPosApplication.class, args);
     }
 }
+
+

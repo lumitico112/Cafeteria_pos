@@ -1,6 +1,6 @@
 package com.cafeteria.filter;
 
-import com.cafeteria.service.JwtService;
+import com.cafeteria.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
