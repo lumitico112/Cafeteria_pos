@@ -1,33 +1,185 @@
-HELP.md
+# ========================================
+# .gitignore - Sistema POS Cafetería
+# ========================================
+
+# ========================================
+# ARCHIVOS SENSIBLES - NUNCA SUBIR A GIT
+# ========================================
+.env
+.env.local
+.env.production
+application-prod.properties
+application-secret.properties
+
+# Credenciales y keys
+*.key
+*.pem
+*.p12
+*.jks
+secrets/
+credentials/
+
+# ========================================
+# DIRECTORIOS DE BUILD Y COMPILACIÓN
+# ========================================
 target/
-.mvn/wrapper/maven-wrapper.jar
+build/
+out/
+dist/
+bin/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ========================================
+# ARCHIVOS DE LOGS
+# ========================================
+logs/
+*.log
+*.log.*
+/log/
+spring.log
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ========================================
+# UPLOADS Y ARCHIVOS TEMPORALES
+# ========================================
+uploads/
+temp/
+tmp/
+*.tmp
+*.temp
+
+# ========================================
+# IDEs
+# ========================================
+
+# IntelliJ IDEA
+.idea/
 *.iml
+*.iws
 *.ipr
+.idea_modules/
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata
+.loadpath
+*.launch
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ========================================
+# MAVEN
+# ========================================
+.mvn/
+mvnw
+mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# ========================================
+# GRADLE
+# ========================================
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# ========================================
+# NODE (si usas Node para herramientas frontend)
+# ========================================
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# ========================================
+# SISTEMA OPERATIVO
+# ========================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ========================================
+# BASES DE DATOS
+# ========================================
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+
+# ========================================
+# REPORTES Y DOCUMENTOS GENERADOS
+# ========================================
+# No subir reportes generados
+# reports/*.pdf
+# reports/*.xlsx
+
+# ========================================
+# DEPENDENCIAS DESCARGADAS
+# ========================================
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+
+# ========================================
+# ARCHIVOS DE CONFIGURACIÓN LOCAL
+# ========================================
+application-local.properties
+application-dev.properties
+config/local/
+
+# ========================================
+# BACKUPS
+# ========================================
+*.bak
+*.backup
+*.old
+*.orig
+
+# ========================================
+# OTROS
+# ========================================
+.apt_generated
+.apt_generated_tests
+.cache
+.externalToolBuilders/
+.recommenders/
+.tern-project
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+.sonarlint/
+.scannerwork/

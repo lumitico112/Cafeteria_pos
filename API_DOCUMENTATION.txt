@@ -3,6 +3,126 @@
 # Backend Spring Boot para Frontend Angular
 # ========================================
 
+## 🚀 INICIO RÁPIDO
+
+1. Clonar proyecto: git clone <repo-url>
+2. Crear .env: copy .env.example .env
+3. Editar .env: configurar DB_PASSWORD y JWT_SECRET_KEY
+4. Instalar: mvn clean install
+5. Ejecutar: mvn spring-boot:run
+6. Backend corriendo en: http://localhost:8080
+7. Desarrollar frontend Angular en proyecto separado (puerto 4200)
+
+Estado del Backend: ✅ LISTO PARA DESARROLLO ANGULAR
+
+## ⚠️ SEGURIDAD CRÍTICA - LEER PRIMERO
+
+### 1. CONFIGURACIÓN INICIAL DEL PROYECTO
+
+**IMPORTANTE**: El archivo .env NO está incluido en el repositorio por seguridad.
+
+PASOS OBLIGATORIOS ANTES DE INICIAR:
+
+1. Copia el archivo .env.example a .env:
+   Windows: copy .env.example .env
+   Linux/Mac: cp .env.example .env
+
+2. Genera una clave JWT SEGURA (ejecuta UNO de estos):
+   
+   # PowerShell (Windows):
+   [Convert]::ToBase64String((1..32|%{Get-Random -Max 256}))
+   
+   # OpenSSL (Linux/Mac/Git Bash):
+   openssl rand -base64 32
+   
+   # Node.js (cualquier plataforma):
+   node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+3. Edita el archivo .env y actualiza OBLIGATORIAMENTE:
+   
+   DB_PASSWORD=TU_PASSWORD_MYSQL_REAL
+   JWT_SECRET_KEY=LA_CLAVE_GENERADA_EN_EL_PASO_2
+   
+   Ejemplo:
+   DB_PASSWORD=DataBase_1.
+   JWT_SECRET_KEY=WgBl1a4xhMCmurt65MB+Lg26u3OQt+n4tAI9ahDTs=
+
+4. Valores opcionales que puedes ajustar en .env:
+   - DB_HOST, DB_PORT, DB_NAME (si MySQL está en otro servidor)
+   - FILE_UPLOAD_DIR (ruta donde se guardan imágenes)
+   - REPORTS_COMPANY_NAME, REPORTS_COMPANY_ADDRESS, etc.
+   - CORS_ALLOWED_ORIGINS (URL de tu frontend Angular)
+
+5. Descargar dependencias e instalar:
+   mvn clean install
+
+6. Ejecutar la aplicación:
+   mvn spring-boot:run
+   
+   O usar el IDE run/debug
+
+### 2. GITIGNORE - PROTECCIÓN AUTOMÁTICA
+
+El archivo .gitignore YA está configurado y protege:
+- ✅ .env (NUNCA se subirá a Git - cada desarrollador crea el suyo)
+- ✅ uploads/ (archivos subidos por usuarios)
+- ✅ temp/ y logs/ (archivos temporales)
+- ✅ target/ (archivos compilados)
+
+VERIFICACIÓN antes de cada commit:
+git status
+# El archivo .env NO debe aparecer en la lista
+# Si aparece, el .gitignore tiene un error
+
+### 3. ARQUITECTURA DEL SISTEMA
+
+Spring Boot Backend (Puerto 8080):
+- API REST pura (JSON)
+- Autenticación JWT
+- Sin vistas HTML (solo endpoints)
+
+Angular Frontend (Puerto 4200 - proyecto separado):
+- Consumirá la API REST
+- Interfaz de usuario completa
+- Comunicación vía HTTP + JWT
+
+### 4. DEPENDENCIAS CLAVE
+
+spring-dotenv (v4.0.0):
+- Carga automáticamente el archivo .env
+- No requiere configuración adicional
+- Variables disponibles como ${VAR_NAME} en application.properties
+
+spring-boot-starter-security + JWT:
+- Autenticación basada en tokens
+- Sin sesiones (stateless)
+- Tokens válidos por 24 horas
+
+iText7 (v7.2.5):
+- Generación de PDFs (boletas, reportes)
+
+Apache POI (v5.2.3):
+- Generación y lectura de Excel
+- Importación/exportación masiva
+
+### 5. CHECKLIST DE SEGURIDAD PRE-PRODUCCIÓN
+
+Antes de desplegar a producción:
+☐ Generar nueva JWT_SECRET_KEY única (NUNCA usar la de desarrollo)
+☐ Usar contraseñas fuertes de base de datos
+☐ Habilitar HTTPS/SSL (certificado válido)
+☐ Configurar CORS solo para dominios autorizados de producción
+☐ Cambiar credenciales de usuarios por defecto (admin@cafeteria.com)
+☐ Implementar rate limiting para prevenir ataques
+☐ Verificar que .env NO existe en el repositorio: git ls-files | grep .env
+☐ Configurar backups automáticos de base de datos
+☐ Habilitar logging de auditoría en producción
+☐ Validar todos los inputs (ya implementado en backend)
+☐ Usar variables de entorno del sistema operativo en lugar de .env
+☐ Revisar y actualizar dependencias a últimas versiones seguras
+☐ Configurar firewall para MySQL (solo acceso desde backend)
+☐ Deshabilitar spring.jpa.show-sql=true en producción
+
 ## CONFIGURACIÓN BASE
 Base URL: http://localhost:8080
 Content-Type: application/json
