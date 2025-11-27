@@ -5,15 +5,115 @@
 
 ## 🚀 INICIO RÁPIDO
 
-1. Clonar proyecto: git clone <repo-url>
-2. Crear .env: copy .env.example .env
-3. Editar .env: configurar DB_PASSWORD y JWT_SECRET_KEY
-4. Instalar: mvn clean install
-5. Ejecutar: mvn spring-boot:run
-6. Backend corriendo en: http://localhost:8080
-7. Desarrollar frontend Angular en proyecto separado (puerto 4200)
+1. **Crear base de datos**: Ejecutar script SQL `database/schema.sql`
+2. Clonar proyecto: git clone <repo-url>
+3. Crear .env: copy .env.example .env
+4. Editar .env: configurar DB_PASSWORD y JWT_SECRET_KEY
+5. Instalar: mvn clean install
+6. Ejecutar: mvn spring-boot:run
+7. Backend corriendo en: http://localhost:8080
+8. Desarrollar frontend Angular en proyecto separado (puerto 4200)
 
 Estado del Backend: ✅ LISTO PARA DESARROLLO ANGULAR
+Schema Status: ✅ VALIDADO Y FUNCIONAL (ddl-auto=validate)
+
+## 🗄️ CONFIGURACIÓN DE BASE DE DATOS
+
+### ⚠️ IMPORTANTE: Base de Datos Manual
+
+**El proyecto NO crea las tablas automáticamente**. Debes ejecutar el script SQL manualmente.
+
+### Pasos para Crear la Base de Datos:
+
+1. **Accede a MySQL:**
+   ```bash
+   mysql -u root -p
+   ```
+
+2. **Ejecuta el script de base de datos:**
+   ```sql
+   source C:/D/AGOSTO 2025/Desarrollo web Integrado/cafeteria/database/schema.sql
+   ```
+   
+   O desde línea de comandos:
+   ```bash
+   mysql -u root -p < database/schema.sql
+   ```
+
+3. **Verifica que se creó correctamente:**
+   ```sql
+   USE sistema_pos;
+   SHOW TABLES;
+   ```
+
+### Lo que Incluye el Script SQL:
+
+✅ **Tablas completas** con todas las columnas y tipos de datos
+✅ **Relaciones (Foreign Keys)** entre todas las tablas
+✅ **Índices optimizados** para búsquedas rápidas:
+   - Índices simples en campos frecuentemente consultados
+   - Índices compuestos para consultas complejas
+   - Índices FULLTEXT para búsqueda de texto
+   
+✅ **Triggers automáticos**:
+   - **Auto-crear Cliente**: Cuando se crea un Usuario con rol CLIENTE, automáticamente se crea su registro en tabla `cliente`
+   - **Actualizar Stock**: Reduce inventario automáticamente al completar un pedido
+   - **Calcular Totales**: Calcula el total del pedido automáticamente
+   - **Validar Stock**: Valida que haya stock suficiente antes de crear pedido
+   - **Auditoría**: Registra cambios importantes
+   
+✅ **Vistas útiles**:
+   - `v_productos_stock_bajo`: Productos que necesitan reabastecimiento
+   - `v_ventas_por_dia`: Estadísticas diarias de ventas
+   - `v_productos_mas_vendidos`: Top productos vendidos
+   
+✅ **Procedimientos almacenados**:
+   - `sp_reporte_ventas`: Genera reporte de ventas por rango de fechas
+   - `sp_inventario_critico`: Lista productos con stock crítico
+   
+✅ **Eventos programados**:
+   - Limpia tokens JWT expirados diariamente
+   - Actualiza estado de promociones vencidas cada hora
+   
+✅ **Datos iniciales (Roles y Permisos)**:
+   - Roles: ADMIN, EMPLEADO, CLIENTE
+   - Permisos básicos para cada módulo
+   - Asociación roles-permisos predefinida
+
+### Configuración de spring.jpa.hibernate.ddl-auto:
+
+El proyecto está configurado con `ddl-auto=validate`:
+- ✅ Spring Boot **valida** que las tablas existan
+- ✅ Spring Boot **NO crea** ni **modifica** tablas
+- ✅ Si hay diferencias con las entidades Java, la aplicación **falla** al inicio (esto es bueno para detectar errores)
+- ✅ El esquema se mantiene **estable** y **controlado** vía SQL
+
+### ⚙️ Configuración de Seguridad (OPCIONAL - Recomendado en Producción)
+
+**Para DESARROLLO:** Puedes usar el usuario `root` directamente.
+
+**Para PRODUCCIÓN:** Ejecuta el script de seguridad:
+```bash
+mysql -u root -p < database/security_config.sql
+```
+
+**Lo que hace security_config.sql:**
+✅ Crea usuario `cafeteria_app` con privilegios mínimos
+✅ Solo permisos SELECT, INSERT, UPDATE, DELETE, EXECUTE
+✅ Bloquea DROP, ALTER, CREATE (mayor seguridad)
+✅ Configura timeouts y variables de rendimiento
+✅ Habilita logs de consultas lentas
+✅ Crea usuario para backups
+
+**Actualizar .env para usar usuario seguro:**
+```properties
+DB_USERNAME=cafeteria_app
+DB_PASSWORD=CafeteriaApp_2025!
+```
+
+⚠️ **IMPORTANTE:** Cambiar la contraseña en `security_config.sql` antes de ejecutar en producción
+
+**Ver:** `database/README.md` para instrucciones detalladas
 
 ## ⚠️ SEGURIDAD CRÍTICA - LEER PRIMERO
 
@@ -262,8 +362,9 @@ Response Success (200):
     "nombre": "Café Americano",
     "descripcion": "Café negro 8oz",
     "precio": 5.50,
+    "impuesto": 0.18,
     "imagenUrl": "cafe-americano.jpg",
-    "estado": "DISPONIBLE",
+    "estado": "ACTIVO",
     "idCategoria": 1,
     "nombreCategoria": "Bebidas Calientes",
     "cantidadActual": 100,
@@ -271,6 +372,8 @@ Response Success (200):
     "unidadMedida": "unidad"
   }
 ]
+
+Estados válidos: ACTIVO, INACTIVO
 
 ### 2. Buscar Producto por ID (GET /productos/{id})
 Endpoint: GET /productos/{id}
@@ -283,8 +386,9 @@ Response Success (200):
   "nombre": "Café Americano",
   "descripcion": "Café negro 8oz",
   "precio": 5.50,
+  "impuesto": 0.18,
   "imagenUrl": "cafe-americano.jpg",
-  "estado": "DISPONIBLE",
+  "estado": "ACTIVO",
   "idCategoria": 1,
   "nombreCategoria": "Bebidas Calientes",
   "cantidadActual": 100,
@@ -312,7 +416,9 @@ Request Body:
   "nombre": "Cappuccino",
   "descripcion": "Café con leche espumosa",
   "precio": 7.50,
+  "impuesto": 0.18,
   "imagenUrl": "cappuccino.jpg",
+  "estado": "ACTIVO",
   "idCategoria": 1,
   "cantidadActual": 50,
   "stockMinimo": 10,
@@ -413,16 +519,16 @@ Response Success (200):
   {
     "idPedido": 1,
     "fecha": "2025-11-26T14:30:00",
-    "estado": "COMPLETADO",
+    "estado": "ENTREGADO",
     "tipoEntrega": "LOCAL",
     "total": 25.50,
     "idUsuario": 3,
     "nombreCliente": "Juan Pérez",
-    "idEmpleado": 2,
+    "atendidoPor": 2,
     "nombreEmpleado": "María López",
     "detalles": [
       {
-        "idDetallePedido": 1,
+        "idDetalle": 1,
         "idProducto": 1,
         "nombreProducto": "Café Americano",
         "cantidad": 2,
@@ -430,7 +536,7 @@ Response Success (200):
         "subtotal": 11.00
       },
       {
-        "idDetallePedido": 2,
+        "idDetalle": 2,
         "idProducto": 5,
         "nombreProducto": "Croissant",
         "cantidad": 3,
@@ -451,7 +557,8 @@ Endpoint: GET /pedidos/estado/{estado}
 Autenticación: Requerida
 Roles: ADMIN, EMPLEADO
 
-Estados válidos: PENDIENTE, EN_PROCESO, COMPLETADO, CANCELADO
+Estados válidos: PENDIENTE, PREPARACION, LISTO, ENTREGADO, CANCELADO
+Tipo de entrega: DELIVERY, RETIRO, LOCAL
 
 ### 4. Buscar Pedido por ID (GET /pedidos/{id})
 Endpoint: GET /pedidos/{id}
@@ -466,7 +573,7 @@ Roles: Todos
 Request Body:
 {
   "idUsuario": 3,
-  "tipoEntrega": "DOMICILIO",
+  "tipoEntrega": "DELIVERY",
   "detalles": [
     {
       "idProducto": 1,
@@ -484,7 +591,7 @@ Response Success (201):
   "idPedido": 15,
   "fecha": "2025-11-26T19:00:00",
   "estado": "PENDIENTE",
-  "tipoEntrega": "DOMICILIO",
+  "tipoEntrega": "DELIVERY",
   "total": 15.50,
   ...
 }
@@ -496,8 +603,10 @@ Roles: ADMIN, EMPLEADO
 
 Request Body:
 {
-  "estado": "EN_PROCESO"
+  "estado": "PREPARACION"
 }
+
+Estados válidos: PENDIENTE, PREPARACION, LISTO, ENTREGADO, CANCELADO
 
 ## ========================================
 ## GESTIÓN DE INVENTARIO
@@ -558,11 +667,19 @@ Response Success (200):
   {
     "idPromocion": 1,
     "nombre": "Happy Hour Café",
-    "descripcion": "20% descuento en cafés de 3pm a 5pm",
-    "porcentajeDescuento": 20.0,
-    "fechaInicio": "2025-11-01T00:00:00",
-    "fechaFin": "2025-11-30T23:59:59",
-    "imagenUrl": "promo-cafe.jpg",
+    "descripcion": "2x1 en cafés de 3pm a 5pm",
+    "tipo": "DOS_POR_UNO",
+    "fechaInicio": "2025-11-01",
+    "fechaFin": "2025-11-30",
+    "estado": "ACTIVA"
+  },
+  {
+    "idPromocion": 2,
+    "nombre": "Combo Desayuno",
+    "descripcion": "Café + croissant por S/10",
+    "tipo": "COMBO",
+    "fechaInicio": "2025-12-01",
+    "fechaFin": "2025-12-31",
     "estado": "ACTIVA"
   }
 ]
@@ -579,13 +696,15 @@ Roles: ADMIN
 
 Request Body:
 {
-  "nombre": "Descuento Fin de Semana",
-  "descripcion": "15% off en todo",
-  "porcentajeDescuento": 15.0,
-  "fechaInicio": "2025-12-01T00:00:00",
-  "fechaFin": "2025-12-31T23:59:59",
-  "imagenUrl": "promo-weekend.jpg"
+  "nombre": "Descuento Especial",
+  "descripcion": "Descuento en productos seleccionados",
+  "tipo": "DESCUENTO",
+  "fechaInicio": "2025-12-01",
+  "fechaFin": "2025-12-31"
 }
+
+Tipos válidos: DESCUENTO, COMBO, DOS_POR_UNO
+Fechas en formato: YYYY-MM-DD
 
 ### 4. Actualizar Promoción (PUT /promociones/{id})
 Endpoint: PUT /promociones/{id}
@@ -669,7 +788,7 @@ Roles: ADMIN, EMPLEADO
 Query Parameters (todos opcionales):
 - fechaInicio: 2025-01-01T00:00:00
 - fechaFin: 2025-12-31T23:59:59
-- estado: PENDIENTE|EN_PROCESO|COMPLETADO|CANCELADO
+- estado: PENDIENTE|PREPARACION|LISTO|ENTREGADO|CANCELADO
 - idUsuario: 3
 - formato: PDF o EXCEL (default: PDF)
 
