@@ -40,18 +40,15 @@ public class AuthenticationService {
         user.setApellido(request.getLastname());
         user.setCorreo(request.getEmail());
         user.setContrasena(passwordEncoder.encode(request.getPassword()));
+        user.setTelefono(request.getPhone());
+        user.setDireccion(request.getAddress());
         user.setRol(userRole);
         user.setEstado(Usuario.Estado.ACTIVO);
         
-        Usuario savedUser = usuarioRepository.save(user);
+        usuarioRepository.save(user);
         
-        // Crear PerfilCliente automáticamente
-        var perfil = new com.cafeteria.entity.PerfilCliente();
-        perfil.setUsuario(savedUser);
-        perfil.setPuntosFidelizacion(0);
-        perfil.setTelefono(request.getPhone()); // Asumiendo que agregaremos phone al request
-        perfil.setDireccion(request.getAddress()); // Asumiendo que agregaremos address al request
-        perfilClienteRepository.save(perfil);
+        // El trigger 'trg_crear_cliente_auto' se encargará de crear el registro en perfil_cliente
+        // usando los datos de telefono y direccion que acabamos de guardar en usuario.
         
         // Load UserDetails to generate token (using the CustomUserDetailsService logic)
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getCorreo());

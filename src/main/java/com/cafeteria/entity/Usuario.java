@@ -30,6 +30,12 @@ public class Usuario {
     
     @Column(nullable = false, length = 255)
     private String contrasena;
+
+    @Column(length = 20)
+    private String telefono;
+
+    @Column(length = 255)
+    private String direccion;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
