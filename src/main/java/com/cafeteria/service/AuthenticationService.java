@@ -29,6 +29,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
+    private final com.cafeteria.repository.PerfilClienteRepository perfilClienteRepository;
+
     public AuthenticationResponse register(RegisterRequest request) {
         Rol userRole = rolRepository.findByNombre("CLIENTE")
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -41,7 +43,15 @@ public class AuthenticationService {
         user.setRol(userRole);
         user.setEstado(Usuario.Estado.ACTIVO);
         
-        usuarioRepository.save(user);
+        Usuario savedUser = usuarioRepository.save(user);
+        
+        // Crear PerfilCliente automáticamente
+        var perfil = new com.cafeteria.entity.PerfilCliente();
+        perfil.setUsuario(savedUser);
+        perfil.setPuntosFidelizacion(0);
+        perfil.setTelefono(request.getPhone()); // Asumiendo que agregaremos phone al request
+        perfil.setDireccion(request.getAddress()); // Asumiendo que agregaremos address al request
+        perfilClienteRepository.save(perfil);
         
         // Load UserDetails to generate token (using the CustomUserDetailsService logic)
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getCorreo());
