@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
             log.info("Usuario admin creado exitosamente con ID: {}", adminUser.getIdUsuario());
             log.info("Credenciales por defecto: admin@cafeteria.com / admin123");
         } else {
-            log.info("Ya existen {} usuarios en la base de datos, omitiendo creación de admin", userCount);
+            log.info("Ya existen {} usuarios en la base de datos.", userCount);
         }
         
         log.info("=== DataInitializer finalizado exitosamente ===");
