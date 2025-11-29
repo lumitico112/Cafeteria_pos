@@ -22,6 +22,8 @@ public class UsuarioMapper {
         dto.setCorreo(usuario.getCorreo());
         dto.setEstado(usuario.getEstado());
         dto.setFechaCreacion(usuario.getFechaCreacion());
+        dto.setTelefono(usuario.getTelefono());
+        dto.setDireccion(usuario.getDireccion());
         
         if (usuario.getRol() != null) {
             dto.setIdRol(usuario.getRol().getIdRol());
@@ -29,8 +31,10 @@ public class UsuarioMapper {
         }
         
         if (usuario.getPerfilCliente() != null) {
-            dto.setTelefono(usuario.getPerfilCliente().getTelefono());
-            dto.setDireccion(usuario.getPerfilCliente().getDireccion());
+            // Si hay perfil, usamos sus datos (opcional, o mantenemos los de usuario)
+            // Por consistencia con la escritura, priorizamos Usuario, pero si se requiere
+            // lógica específica de perfil, se puede dejar.
+            // En este caso, como escribimos en Usuario, leemos de Usuario.
             dto.setPuntosFidelizacion(usuario.getPerfilCliente().getPuntosFidelizacion());
         }
 
