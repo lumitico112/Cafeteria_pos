@@ -50,6 +50,8 @@ public class UsuarioMapper {
         usuario.setEstado(Usuario.Estado.ACTIVO);
         usuario.setFechaCreacion(LocalDateTime.now());
         usuario.setRol(rol);
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setDireccion(dto.getDireccion());
 
         return usuario;
     }
@@ -73,5 +75,8 @@ public class UsuarioMapper {
         if (dto.getEstado() != null) {
             usuario.setEstado(dto.getEstado());
         }
+        
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setDireccion(dto.getDireccion());
     }
 }
