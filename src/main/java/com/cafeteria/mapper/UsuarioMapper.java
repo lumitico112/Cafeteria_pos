@@ -21,6 +21,7 @@ public class UsuarioMapper {
         dto.setApellido(usuario.getApellido());
         dto.setCorreo(usuario.getCorreo());
         dto.setEstado(usuario.getEstado());
+        dto.setFechaCreacion(usuario.getFechaCreacion());
         
         if (usuario.getRol() != null) {
             dto.setIdRol(usuario.getRol().getIdRol());
