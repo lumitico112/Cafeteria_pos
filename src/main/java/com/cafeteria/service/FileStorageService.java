@@ -8,6 +8,8 @@ public interface FileStorageService {
     
     String storeFile(MultipartFile file);
     
+    void init();
+    
     byte[] loadFile(String filename);
     
     void deleteFile(String filename);

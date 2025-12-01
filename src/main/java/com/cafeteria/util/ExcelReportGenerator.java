@@ -3,7 +3,7 @@ package com.cafeteria.util;
 import com.cafeteria.dto.PedidoDTO;
 import com.cafeteria.dto.ProductoDTO;
 import com.cafeteria.dto.UsuarioDTO;
-import com.cafeteria.entity.Inventario;
+import com.cafeteria.dto.UsuarioDTO;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -172,7 +172,7 @@ public class ExcelReportGenerator {
         }
     }
 
-    public byte[] generateInventarioExcel(List<Inventario> inventarios) {
+    public byte[] generateInventarioExcel(List<com.cafeteria.dto.InventarioDTO> inventarios) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Inventario");
 
@@ -189,10 +189,10 @@ public class ExcelReportGenerator {
 
             // Data
             int rowNum = 1;
-            for (Inventario inv : inventarios) {
+            for (com.cafeteria.dto.InventarioDTO inv : inventarios) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(inv.getIdInventario());
-                row.createCell(1).setCellValue(inv.getProducto().getNombre());
+                row.createCell(1).setCellValue(inv.getNombreProducto());
                 row.createCell(2).setCellValue(inv.getCantidadActual());
                 row.createCell(3).setCellValue(inv.getStockMinimo());
                 row.createCell(4).setCellValue(inv.getUnidadMedida());

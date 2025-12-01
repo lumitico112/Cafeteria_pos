@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/index", "/home").permitAll() // Allow access to home page
                 .requestMatchers("/auth/**").permitAll() // Permitir login/register sin autenticación
                 .requestMatchers("/files/download/**").permitAll() // Allow public file downloads
+                .requestMatchers("/uploads/**").permitAll() // Allow access to uploaded images
                 .requestMatchers("/images/**", "/css/**", "/js/**", "/favicon.ico").permitAll() // Static resources
                 .requestMatchers("/error").permitAll() // Allow error page
                 .anyRequest().authenticated() // Todo lo demás requiere autenticación

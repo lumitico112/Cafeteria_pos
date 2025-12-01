@@ -19,11 +19,16 @@ public class DataInitializer implements CommandLineRunner {
     private final RolRepository rolRepository;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.cafeteria.service.FileStorageService fileStorageService;
     
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         log.info("=== Iniciando DataInitializer ===");
+        
+        // Inicializar almacenamiento de archivos
+        fileStorageService.init();
+        log.info("Almacenamiento de archivos inicializado correctamente");
         
         long roleCount = rolRepository.count();
         log.info("Roles encontrados en base de datos: {}", roleCount);

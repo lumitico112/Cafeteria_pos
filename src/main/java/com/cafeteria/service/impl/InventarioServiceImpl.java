@@ -25,6 +25,8 @@ public class InventarioServiceImpl implements InventarioService {
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
 
+    private final com.cafeteria.mapper.InventarioMapper inventarioMapper;
+
     @Override
     @Transactional(readOnly = true)
     public Inventario obtenerPorProducto(Integer idProducto) {
@@ -40,8 +42,31 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Inventario> listarTodos() {
-        return inventarioRepository.findAll();
+    public List<com.cafeteria.dto.InventarioDTO> listarTodos() {
+        return inventarioRepository.findAll().stream()
+                .map(inventarioMapper::toDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public com.cafeteria.dto.InventarioDTO actualizar(Integer id, com.cafeteria.dto.InventarioDTO dto) {
+        Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
+
+        // Actualizar campos permitidos
+        if (dto.getStockMinimo() != null) {
+            inventario.setStockMinimo(dto.getStockMinimo());
+        }
+        
+        // Si se quiere actualizar la cantidad directamente (aunque se recomienda usar ajustarStock)
+        if (dto.getCantidadActual() != null) {
+            // Opcional: Registrar movimiento de ajuste automático o simplemente actualizar
+            inventario.setCantidadActual(dto.getCantidadActual());
+        }
+
+        Inventario actualizado = inventarioRepository.save(inventario);
+        return inventarioMapper.toDTO(actualizado);
     }
 
     @Override

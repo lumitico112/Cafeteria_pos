@@ -3,7 +3,7 @@ package com.cafeteria.util;
 import com.cafeteria.dto.PedidoDTO;
 import com.cafeteria.dto.ProductoDTO;
 import com.cafeteria.dto.UsuarioDTO;
-import com.cafeteria.entity.Inventario;
+import com.cafeteria.dto.UsuarioDTO;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -173,7 +173,7 @@ public class PdfReportGenerator {
         }
     }
 
-    public byte[] generateInventarioReport(List<Inventario> inventarios, String companyName) {
+    public byte[] generateInventarioReport(List<com.cafeteria.dto.InventarioDTO> inventarios, String companyName) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         
         try {
@@ -197,9 +197,9 @@ public class PdfReportGenerator {
             table.addHeaderCell("Estado");
 
             // Data
-            for (Inventario inv : inventarios) {
+            for (com.cafeteria.dto.InventarioDTO inv : inventarios) {
                 table.addCell(String.valueOf(inv.getIdInventario()));
-                table.addCell(inv.getProducto().getNombre());
+                table.addCell(inv.getNombreProducto());
                 table.addCell(String.valueOf(inv.getCantidadActual()));
                 table.addCell(String.valueOf(inv.getStockMinimo()));
                 

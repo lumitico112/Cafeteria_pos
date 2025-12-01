@@ -4,7 +4,7 @@ import com.cafeteria.dto.PedidoDTO;
 import com.cafeteria.dto.ProductoDTO;
 import com.cafeteria.dto.ReportFilterDTO;
 import com.cafeteria.dto.UsuarioDTO;
-import com.cafeteria.entity.Inventario;
+import com.cafeteria.dto.UsuarioDTO;
 import com.cafeteria.entity.Pedido;
 import com.cafeteria.repository.InventarioRepository;
 import com.cafeteria.service.InventarioService;
@@ -91,7 +91,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public byte[] generateInventarioReport(ReportFilterDTO filter) {
-        List<Inventario> inventarios = inventarioService.listarTodos();
+        List<com.cafeteria.dto.InventarioDTO> inventarios = inventarioService.listarTodos();
 
         if ("EXCEL".equalsIgnoreCase(filter.getFormato())) {
             return excelReportGenerator.generateInventarioExcel(inventarios);

@@ -71,9 +71,29 @@ public class UsuarioController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UsuarioDTO> obtenerPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    public ResponseEntity<UsuarioDTO> obtenerPorId(@PathVariable Integer id, Authentication authentication) {
+        UsuarioDTO usuario = usuarioService.buscarPorId(id);
+        
+        // Verificar permisos: Admin o el mismo usuario
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        if (!isAdmin && !usuario.getCorreo().equals(authentication.getName())) {
+            return ResponseEntity.status(403).build();
+        }
+        
+        // Si es cliente, cargar datos del perfil (puntos, etc)
+        if ("CLIENTE".equals(usuario.getNombreRol())) {
+            PerfilCliente perfil = usuarioService.obtenerPerfilCliente(usuario.getIdUsuario());
+            if (perfil != null) {
+                // Priorizar datos del perfil si existen
+                if (perfil.getTelefono() != null) usuario.setTelefono(perfil.getTelefono());
+                if (perfil.getDireccion() != null) usuario.setDireccion(perfil.getDireccion());
+                usuario.setPuntosFidelizacion(perfil.getPuntosFidelizacion());
+            }
+        }
+        
+        return ResponseEntity.ok(usuario);
     }
     
     @PostMapping

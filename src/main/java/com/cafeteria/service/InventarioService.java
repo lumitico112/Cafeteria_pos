@@ -13,5 +13,7 @@ public interface InventarioService {
     void ajustarStock(Integer idProducto, Integer cantidad, String motivo, Integer idUsuario);
 
     // Nuevo método
-    List<Inventario> listarTodos();
+    List<com.cafeteria.dto.InventarioDTO> listarTodos();
+    
+    com.cafeteria.dto.InventarioDTO actualizar(Integer id, com.cafeteria.dto.InventarioDTO dto);
 }

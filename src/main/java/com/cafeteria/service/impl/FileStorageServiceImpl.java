@@ -59,6 +59,15 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
     
     @Override
+    public void init() {
+        try {
+            Files.createDirectories(getFileStorageLocation());
+        } catch (IOException ex) {
+            throw new RuntimeException("No se pudo inicializar la carpeta de almacenamiento", ex);
+        }
+    }
+    
+    @Override
     public byte[] loadFile(String filename) {
         try {
             Path filePath = getFileStorageLocation().resolve(filename).normalize();

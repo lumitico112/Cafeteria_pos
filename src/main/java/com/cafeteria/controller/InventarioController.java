@@ -1,5 +1,6 @@
 package com.cafeteria.controller;
 
+import com.cafeteria.dto.InventarioDTO;
 import com.cafeteria.entity.Inventario;
 import com.cafeteria.entity.Usuario;
 import com.cafeteria.repository.UsuarioRepository;
@@ -25,7 +26,7 @@ public class InventarioController {
     private final UsuarioRepository usuarioRepository;
 
     @GetMapping
-    public ResponseEntity<List<Inventario>> listar() {
+    public ResponseEntity<List<com.cafeteria.dto.InventarioDTO>> listar() {
         return ResponseEntity.ok(inventarioService.listarTodos());
     }
     
@@ -57,5 +58,10 @@ public class InventarioController {
 
         inventarioService.ajustarStock(idProducto, cantidad, motivo, usuario.getIdUsuario());
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<InventarioDTO> actualizar(@PathVariable Integer id, @RequestBody InventarioDTO dto) {
+        return ResponseEntity.ok(inventarioService.actualizar(id, dto));
     }
 }
