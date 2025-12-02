@@ -74,6 +74,17 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setFecha(LocalDateTime.now());
         pedido.setEstado(Pedido.EstadoPedido.PENDIENTE);
         
+        // Set delivery/pickup details
+        if (pedidoDTO.getTipoEntrega() != null) {
+            pedido.setTipoEntrega(pedidoDTO.getTipoEntrega());
+            
+            if (pedidoDTO.getTipoEntrega() == Pedido.TipoEntrega.DELIVERY) {
+                pedido.setDireccionEntrega(pedidoDTO.getDireccionEntrega());
+            } else if (pedidoDTO.getTipoEntrega() == Pedido.TipoEntrega.RETIRO) {
+                pedido.setFechaRecojo(pedidoDTO.getFechaRecojo());
+            }
+        }
+        
         if (pedidoDTO.getAtendidoPor() != null) {
             Usuario empleado = usuarioRepository.findById(pedidoDTO.getAtendidoPor())
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));

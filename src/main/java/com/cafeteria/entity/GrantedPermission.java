@@ -23,6 +23,6 @@ public class GrantedPermission {
     private Rol rol;
     
     @ManyToOne
-    @JoinColumn(name = "operacion_id")
-    private Operacion operacion;
+    @JoinColumn(name = "modulo_id")
+    private Modulo modulo;
 }

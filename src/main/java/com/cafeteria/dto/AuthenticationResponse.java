@@ -16,4 +16,5 @@ public class AuthenticationResponse {
     private String apellido;
     private String email;
     private String rol;
+    private java.util.List<com.cafeteria.entity.Modulo> menu;
 }

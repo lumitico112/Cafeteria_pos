@@ -24,5 +24,7 @@ public class PedidoDTO {
     private Pedido.EstadoPedido estado;
     private BigDecimal total;
     private Pedido.TipoEntrega tipoEntrega;
+    private String direccionEntrega;
+    private LocalDateTime fechaRecojo;
     private List<DetallePedidoDTO> detalles = new ArrayList<>();
 }

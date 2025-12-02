@@ -30,6 +30,8 @@ public class AuthenticationService {
     private final UserDetailsService userDetailsService;
 
     private final com.cafeteria.repository.PerfilClienteRepository perfilClienteRepository;
+    private final com.cafeteria.repository.JwtTokenRepository jwtTokenRepository;
+    private final com.cafeteria.repository.GrantedPermissionRepository grantedPermissionRepository;
 
     public AuthenticationResponse register(RegisterRequest request) {
         Rol userRole = rolRepository.findByNombre("CLIENTE")
@@ -45,7 +47,7 @@ public class AuthenticationService {
         user.setRol(userRole);
         user.setEstado(Usuario.Estado.ACTIVO);
         
-        usuarioRepository.save(user);
+        Usuario savedUser = usuarioRepository.save(user);
         
         // El trigger 'trg_crear_cliente_auto' se encargará de crear el registro en perfil_cliente
         // usando los datos de telefono y direccion que acabamos de guardar en usuario.
@@ -54,6 +56,14 @@ public class AuthenticationService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getCorreo());
         var jwtToken = jwtService.generateToken(userDetails);
         
+        saveUserToken(savedUser, jwtToken);
+
+        // Obtener menús permitidos
+        java.util.List<com.cafeteria.entity.Modulo> menus = grantedPermissionRepository.findByRol(userRole)
+                .stream()
+                .map(com.cafeteria.entity.GrantedPermission::getModulo)
+                .collect(java.util.stream.Collectors.toList());
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .idUsuario(user.getIdUsuario())
@@ -61,6 +71,7 @@ public class AuthenticationService {
                 .apellido(user.getApellido())
                 .email(user.getCorreo())
                 .rol(user.getRol().getNombre())
+                .menu(menus)
                 .build();
     }
 
@@ -78,6 +89,15 @@ public class AuthenticationService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         var jwtToken = jwtService.generateToken(userDetails);
         
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+
+        // Obtener menús permitidos
+        java.util.List<com.cafeteria.entity.Modulo> menus = grantedPermissionRepository.findByRol(user.getRol())
+                .stream()
+                .map(com.cafeteria.entity.GrantedPermission::getModulo)
+                .collect(java.util.stream.Collectors.toList());
+        
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .idUsuario(user.getIdUsuario())
@@ -85,6 +105,27 @@ public class AuthenticationService {
                 .apellido(user.getApellido())
                 .email(user.getCorreo())
                 .rol(user.getRol().getNombre())
+                .menu(menus)
                 .build();
+    }
+
+    private void saveUserToken(Usuario user, String jwtToken) {
+        var token = com.cafeteria.entity.JwtToken.builder()
+                .usuario(user)
+                .token(jwtToken)
+                .isValid(true)
+                .expiracion(new java.util.Date(System.currentTimeMillis() + 86400000)) // 24 hours
+                .build();
+        jwtTokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(Usuario user) {
+        var validUserTokens = jwtTokenRepository.findAllValidTokenByUser(user.getIdUsuario());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setValid(false);
+        });
+        jwtTokenRepository.saveAll(validUserTokens);
     }
 }

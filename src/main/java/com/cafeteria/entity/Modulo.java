@@ -22,4 +22,7 @@ public class Modulo {
     
     @Column(name = "base_path")
     private String basePath;
+    
+    private String label;
+    private String icon;
 }

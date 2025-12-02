@@ -56,7 +56,7 @@ public class PedidoController {
     }
     
     @PatchMapping("/{id}/estado")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO', 'CLIENTE')")
     public ResponseEntity<Void> cambiarEstado(@PathVariable Integer id, @RequestParam Pedido.EstadoPedido estado) {
         pedidoService.cambiarEstado(id, estado);
         return ResponseEntity.ok().build();

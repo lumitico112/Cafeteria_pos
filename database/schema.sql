@@ -155,9 +155,11 @@ CREATE TABLE IF NOT EXISTS pedido (
     id_usuario INT NOT NULL,
     atendido_por INT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('PENDIENTE', 'PREPARACION', 'LISTO', 'ENTREGADO', 'CANCELADO') DEFAULT 'PENDIENTE',
+    estado ENUM('PENDIENTE', 'PREPARACION', 'LISTO', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO') DEFAULT 'PENDIENTE',
     total DECIMAL(10, 2) DEFAULT 0 CHECK (total >= 0),
     tipo_entrega ENUM('DELIVERY', 'RETIRO', 'LOCAL') DEFAULT 'LOCAL',
+    direccion_entrega VARCHAR(255),
+    fecha_recojo DATETIME,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (atendido_por) REFERENCES usuario(id_usuario),
     INDEX idx_pedido_fecha (fecha),
@@ -219,6 +221,8 @@ CREATE TABLE IF NOT EXISTS MODULO (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
     base_path VARCHAR(100),
+    label VARCHAR(100),
+    icon VARCHAR(50),
     INDEX idx_modulo_nombre (nombre)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -243,12 +247,12 @@ CREATE TABLE IF NOT EXISTS OPERACION (
 CREATE TABLE IF NOT EXISTS GRANTED_PERMISSION (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     rol_id INT NOT NULL,
-    operacion_id BIGINT NOT NULL,
-    UNIQUE KEY uk_granted_permission (rol_id, operacion_id),
+    modulo_id BIGINT NOT NULL,
+    UNIQUE KEY uk_granted_permission (rol_id, modulo_id),
     FOREIGN KEY (rol_id) REFERENCES rol(id_rol) ON DELETE CASCADE,
-    FOREIGN KEY (operacion_id) REFERENCES OPERACION(id) ON DELETE CASCADE,
+    FOREIGN KEY (modulo_id) REFERENCES MODULO(id) ON DELETE CASCADE,
     INDEX idx_granted_permission_rol (rol_id),
-    INDEX idx_granted_permission_operacion (operacion_id)
+    INDEX idx_granted_permission_modulo (modulo_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ========================================

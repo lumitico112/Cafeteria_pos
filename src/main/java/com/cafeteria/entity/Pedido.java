@@ -44,6 +44,12 @@ public class Pedido {
     @Column(name = "tipo_entrega", nullable = false)
     private TipoEntrega tipoEntrega = TipoEntrega.LOCAL;
     
+    @Column(name = "direccion_entrega")
+    private String direccionEntrega;
+
+    @Column(name = "fecha_recojo")
+    private LocalDateTime fechaRecojo;
+    
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
     
@@ -51,7 +57,7 @@ public class Pedido {
     private List<Pago> pagos = new ArrayList<>();
     
     public enum EstadoPedido {
-        PENDIENTE, PREPARACION, LISTO, ENTREGADO, CANCELADO
+        PENDIENTE, PREPARACION, LISTO, EN_CAMINO, ENTREGADO, CANCELADO
     }
     
     public enum TipoEntrega {
