@@ -160,6 +160,7 @@ CREATE TABLE IF NOT EXISTS pedido (
     tipo_entrega ENUM('DELIVERY', 'RETIRO', 'LOCAL') DEFAULT 'LOCAL',
     direccion_entrega VARCHAR(255),
     fecha_recojo DATETIME,
+    nombre_cliente VARCHAR(255),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (atendido_por) REFERENCES usuario(id_usuario),
     INDEX idx_pedido_fecha (fecha),

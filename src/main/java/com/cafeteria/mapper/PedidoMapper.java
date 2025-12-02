@@ -21,7 +21,11 @@ public class PedidoMapper {
         PedidoDTO dto = new PedidoDTO();
         dto.setIdPedido(pedido.getIdPedido());
         dto.setIdUsuario(pedido.getUsuario().getIdUsuario());
-        dto.setNombreCliente(pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido());
+        if (pedido.getNombreCliente() != null && !pedido.getNombreCliente().isEmpty()) {
+            dto.setNombreCliente(pedido.getNombreCliente());
+        } else {
+            dto.setNombreCliente(pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido());
+        }
         
         if (pedido.getAtendidoPor() != null) {
             dto.setAtendidoPor(pedido.getAtendidoPor().getIdUsuario());
@@ -66,6 +70,7 @@ public class PedidoMapper {
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
         pedido.setTipoEntrega(dto.getTipoEntrega());
+        pedido.setNombreCliente(dto.getNombreCliente());
         // Otros campos se establecen en el servicio (fecha, estado, total)
         
         return pedido;

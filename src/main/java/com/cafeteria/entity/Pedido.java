@@ -49,6 +49,9 @@ public class Pedido {
 
     @Column(name = "fecha_recojo")
     private LocalDateTime fechaRecojo;
+
+    @Column(name = "nombre_cliente")
+    private String nombreCliente;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
