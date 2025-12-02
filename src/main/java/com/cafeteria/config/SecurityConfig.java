@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll() // Allow access to uploaded images
                 .requestMatchers("/images/**", "/css/**", "/js/**", "/favicon.ico").permitAll() // Static resources
                 .requestMatchers("/error").permitAll() // Allow error page
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/inventario").permitAll() // Allow public access to inventory list
                 .anyRequest().authenticated() // Todo lo demás requiere autenticación
             )
             .sessionManagement(session -> session

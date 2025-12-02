@@ -38,6 +38,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Datos Duplicados");
+        
+        if (ex.getMessage() != null && ex.getMessage().contains("Duplicate entry")) {
+            response.put("message", "Este correo electrónico ya está registrado.");
+        } else {
+            response.put("message", "Error de integridad de datos. Verifica la información.");
+        }
+        
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(org.springframework.security.access.AccessDeniedException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Acceso Denegado");
+        response.put("message", "No tienes permisos para realizar esta acción.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
         Map<String, String> response = new HashMap<>();

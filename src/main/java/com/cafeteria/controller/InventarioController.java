@@ -18,7 +18,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/inventario")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
 public class InventarioController {
 
     private final InventarioService inventarioService;
@@ -31,11 +30,13 @@ public class InventarioController {
     }
     
     @GetMapping("/bajo-stock")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     public ResponseEntity<List<Inventario>> listarBajoStock() {
         return ResponseEntity.ok(inventarioService.listarProductosBajoStock());
     }
 
     @GetMapping("/producto/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     public ResponseEntity<Map<String, Object>> verMovimientos(@PathVariable Integer id) {
         return ResponseEntity.ok(Map.of(
             "producto", productoService.buscarPorId(id),
@@ -45,6 +46,7 @@ public class InventarioController {
     }
 
     @PostMapping("/ajustar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     public ResponseEntity<Void> ajustarStock(@RequestBody Map<String, Object> payload,
                               Authentication authentication) {
         
@@ -61,6 +63,7 @@ public class InventarioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     public ResponseEntity<InventarioDTO> actualizar(@PathVariable Integer id, @RequestBody InventarioDTO dto) {
         return ResponseEntity.ok(inventarioService.actualizar(id, dto));
     }
