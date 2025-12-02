@@ -56,6 +56,11 @@ public class AuthenticationService {
         
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .idUsuario(user.getIdUsuario())
+                .nombre(user.getNombre())
+                .apellido(user.getApellido())
+                .email(user.getCorreo())
+                .rol(user.getRol().getNombre())
                 .build();
     }
 
@@ -67,11 +72,19 @@ public class AuthenticationService {
                 )
         );
         
+        Usuario user = usuarioRepository.findByCorreo(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         var jwtToken = jwtService.generateToken(userDetails);
         
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .idUsuario(user.getIdUsuario())
+                .nombre(user.getNombre())
+                .apellido(user.getApellido())
+                .email(user.getCorreo())
+                .rol(user.getRol().getNombre())
                 .build();
     }
 }
